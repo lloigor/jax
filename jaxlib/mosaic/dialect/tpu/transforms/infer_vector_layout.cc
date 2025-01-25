@@ -276,6 +276,10 @@ class VectorLayoutInferer {
         if (infer(op).failed()) {
           return failure();
         }
+      } else if (auto op = dyn_cast<tpu::DynamicGatherOp>(any_op)) {
+        if (infer(op).failed()) {
+          return failure();
+        }
       } else if (auto op = dyn_cast<tpu::BitcastOp>(any_op)) {
         if (infer(op).failed()) {
           return failure();
@@ -341,8 +345,8 @@ class VectorLayoutInferer {
           return failure();
         }
       } else {
-        any_op.emitOpError("unsupported in vector layout inference");
-        return failure();
+        return any_op.emitError("Not implemented: Unsupported operation: ")
+               << any_op.getName() << " in infer-vector-layout pass";
       }
       CHECK(any_op.getNumResults() == 0 || any_op.hasAttr("out_layout"));
       CHECK(any_op.getNumOperands() == 0 || any_op.hasAttr("in_layout"));
@@ -939,6 +943,18 @@ class VectorLayoutInferer {
   LogicalResult infer(tpu::GatherOp op) {
     auto src_layout = getLayout(op.getSource());
     setLayout(op, src_layout, src_layout);
+    return success();
+  }
+
+  LogicalResult infer(tpu::DynamicGatherOp op) {
+    // We verified bitwidth and same type for source and result in verifier.
+    if (op.getType().getShape() != ArrayRef<int64_t>(target_shape_)) {
+      return op.emitOpError(
+          "Not implemented: DynamicGatherOp only supports VREG shape");
+    }
+    auto src_layout = getLayout(op.getSource());
+    // TODO(jevinjiang): consider add this to elementwise rule.
+    setLayout(op, {src_layout, src_layout}, src_layout);
     return success();
   }
 

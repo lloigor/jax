@@ -1202,6 +1202,36 @@ LogicalResult PackSubelementsOp::verify() {
   return success();
 }
 
+LogicalResult DynamicGatherOp::verify() {
+  if (getSource().getType() != getType()) {
+    return emitOpError("Expected source and result types must match");
+  }
+  if (getType().getElementTypeBitWidth() != 32) {
+    return emitOpError("Not implemented: Only 32-bit gather supported");
+  }
+  if (getType().getRank() != 2) {
+    return emitOpError("Not implemented: Only 2-D gather supported");
+  }
+  // We check shape support in specific pass where target shape is known.
+  if (getDimension() == 0) {
+    if (getIndices().getType().getShape() != getType().getShape()) {
+      return emitOpError(
+          "Expected same shape for source and indices when gather along "
+          "dimension 0");
+    }
+  } else if (getDimension() == 1) {
+    if (getIndices().getType().getShape().back() !=
+        getType().getShape().back()) {
+      return emitOpError(
+          "Expected same size on minor dimension for source and indices when "
+          "gather along dimension 1");
+    }
+  } else {
+    return emitOpError("Not implemented: Only dimension 0 and 1 are supported");
+  }
+  return success();
+}
+
 }  // namespace tpu
 }  // namespace mlir
 

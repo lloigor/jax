@@ -420,7 +420,9 @@ def TPU_GatherOp : TPU_Op<"gather", [Pure]> {
 def TPU_DynamicGatherOp : TPU_Op<"dynamic_gather", [Pure]> {
   let arguments = (ins
     AnyVectorOfNonZeroRank:$source,
-    AnyVectorOfNonZeroRank:$indices,  // If this is 2D, only the first row matters.
+    // For dynamic gather along minormost dim, if the shape matches the source, 
+    // all the indices are used, otherwise we only use the first row.
+    VectorOfNonZeroRankOf<[I32]>:$indices,
     I32Attr:$dimension
   );
   let results = (outs AnyVectorOfNonZeroRank:$output);
@@ -428,6 +430,7 @@ def TPU_DynamicGatherOp : TPU_Op<"dynamic_gather", [Pure]> {
     $source `[` $indices `]` `in` $dimension attr-dict
     `:` type($source) `,` type($indices) `->` type($output)
   }];
+  let hasVerifier = 1;
 }
 
 def TPU_RoundingMode : I32EnumAttr<"RoundingMode", "Rounding mode", [

@@ -15,7 +15,9 @@ limitations under the License.
 
 #include "jaxlib/gpu/hybrid_kernels.h"
 
+#ifndef _WIN32
 #include <dlfcn.h>
+#endif
 
 #include <algorithm>
 #include <cstddef>
@@ -106,17 +108,24 @@ struct MagmaGeev<ffi::C128> {
 
 MagmaLookup::~MagmaLookup() {
   if (initialized_) {
+#ifndef _WIN32
     void* magma_finalize = dlsym(handle_, "magma_finalize");
+#else
+    void* magma_finalize = nullptr;
+#endif
     if (magma_finalize != nullptr) {
       reinterpret_cast<void (*)()>(magma_finalize)();
     }
   }
   if (handle_ != nullptr) {
+#ifndef _WIN32
     dlclose(handle_);
+#endif
   }
 }
 
 absl::StatusOr<void*> MagmaLookup::FindMagmaInit() {
+#ifndef _WIN32
   void* magma_init = nullptr;
   std::vector<const char*> paths;
   const char* magma_lib_path = std::getenv("JAX_GPU_MAGMA_PATH");
@@ -146,6 +155,10 @@ absl::StatusOr<void*> MagmaLookup::FindMagmaInit() {
         "specify an explicit path to the library.");
   }
   return magma_init;
+#else
+  return absl::InternalError(
+      "MAGMA is not enabled on Windows.");
+#endif
 }
 
 absl::Status MagmaLookup::Initialize() {
@@ -172,7 +185,11 @@ absl::StatusOr<void*> MagmaLookup::Find(const char name[]) {
   auto it = symbols_.find(name);
   if (it != symbols_.end()) return it->second;
 
+#ifndef _WIN32
   void* symbol = dlsym(handle_, name);
+#else
+  void* symbol = nullptr;
+#endif
   if (symbol == nullptr) {
     if (lib_path_.has_value()) {
       return absl::InternalError(absl::StrFormat(

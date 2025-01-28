@@ -62,6 +62,7 @@ xla_workspace0()
 load("//third_party/flatbuffers:workspace.bzl", flatbuffers = "repo")
 flatbuffers()
 
+"""
 load(
     "@tsl//third_party/gpus/cuda/hermetic:cuda_json_init_repository.bzl",
     "cuda_json_init_repository",
@@ -87,24 +88,31 @@ cuda_redist_init_repositories(
 cudnn_redist_init_repository(
     cudnn_redistributions = CUDNN_REDISTRIBUTIONS,
 )
+"""
 
 load(
-    "@tsl//third_party/gpus/cuda/hermetic:cuda_configure.bzl",
+    #"@tsl//third_party/gpus/cuda/hermetic:cuda_configure.bzl",
+    "@tsl//third_party/gpus:cuda_configure.bzl",
     "cuda_configure",
 )
 
 cuda_configure(name = "local_config_cuda")
 
+"""
 load(
     "@tsl//third_party/nccl/hermetic:nccl_redist_init_repository.bzl",
     "nccl_redist_init_repository",
 )
 
 nccl_redist_init_repository()
+"""
 
 load(
-    "@tsl//third_party/nccl/hermetic:nccl_configure.bzl",
+    #"@tsl//third_party/nccl/hermetic:nccl_configure.bzl",
+    "@tsl//third_party/nccl:nccl_configure.bzl",
     "nccl_configure",
 )
 
 nccl_configure(name = "local_config_nccl")
+
+register_toolchains("@local_config_cuda//crosstool:cc-toolchain-windows")

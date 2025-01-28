@@ -410,6 +410,9 @@ async def main():
   # Enable verbose failures.
   bazel_command_base.append("--verbose_failures=true")
 
+  bazel_command_base.append("--enable_workspace=true")
+  bazel_command_base.append("--toolchain_resolution_debug=true")
+
   # Requirements update subcommand execution
   if args.command == "requirements_update":
     requirements_command = copy.deepcopy(bazel_command_base)
@@ -484,6 +487,8 @@ async def main():
       wheel_build_command_base.append("--define=xnn_enable_avxvnniint8=false")
 
   else:
+    logging.debug("Using default Bazel compiler options.")
+    """
     gcc_path = args.gcc_path or utils.get_gcc_path_or_exit()
     logging.debug(
         "Using GCC as the compiler, gcc path: %s",
@@ -495,6 +500,7 @@ async def main():
     gcc_major_version = utils.get_gcc_major_version(gcc_path)
     if gcc_major_version < 13:
       wheel_build_command_base.append("--define=xnn_enable_avxvnniint8=false")
+    """
 
   if not args.disable_mkl_dnn:
     logging.debug("Enabling MKL DNN")

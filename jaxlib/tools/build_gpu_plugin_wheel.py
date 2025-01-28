@@ -94,8 +94,8 @@ def prepare_cuda_plugin_wheel(sources_path: pathlib.Path, *, cpu, cuda_version):
   copy_runfiles(
       dst_dir=sources_path,
       src_files=[
-          "__main__/jax_plugins/cuda/pyproject.toml",
-          "__main__/jax_plugins/cuda/setup.py",
+          "_main/jax_plugins/cuda/pyproject.toml",
+          "_main/jax_plugins/cuda/setup.py",
       ],
   )
   build_utils.update_setup_with_cuda_version(sources_path, cuda_version)
@@ -103,12 +103,12 @@ def prepare_cuda_plugin_wheel(sources_path: pathlib.Path, *, cpu, cuda_version):
   copy_runfiles(
       dst_dir=plugin_dir,
       src_files=[
-          "__main__/jax_plugins/cuda/__init__.py",
-          "__main__/jaxlib/version.py",
+          "_main/jax_plugins/cuda/__init__.py",
+          "_main/jaxlib/version.py",
       ],
   )
   copy_runfiles(
-      "__main__/jaxlib/tools/pjrt_c_api_gpu_plugin.so",
+      "_main/jaxlib/tools/pjrt_c_api_gpu_plugin.so",
       dst_dir=plugin_dir,
       dst_filename="xla_cuda_plugin.so",
   )
@@ -122,8 +122,8 @@ def prepare_rocm_plugin_wheel(sources_path: pathlib.Path, *, cpu, rocm_version):
   copy_runfiles(
       dst_dir=sources_path,
       src_files=[
-          "__main__/jax_plugins/rocm/pyproject.toml",
-          "__main__/jax_plugins/rocm/setup.py",
+          "_main/jax_plugins/rocm/pyproject.toml",
+          "_main/jax_plugins/rocm/setup.py",
       ],
   )
   build_utils.update_setup_with_rocm_version(sources_path, rocm_version)
@@ -131,12 +131,12 @@ def prepare_rocm_plugin_wheel(sources_path: pathlib.Path, *, cpu, rocm_version):
   copy_runfiles(
       dst_dir=plugin_dir,
       src_files=[
-          "__main__/jax_plugins/rocm/__init__.py",
-          "__main__/jaxlib/version.py",
+          "_main/jax_plugins/rocm/__init__.py",
+          "_main/jaxlib/version.py",
       ],
   )
   copy_runfiles(
-      "__main__/jaxlib/tools/pjrt_c_api_gpu_plugin.so",
+      "_main/jaxlib/tools/pjrt_c_api_gpu_plugin.so",
       dst_dir=plugin_dir,
       dst_filename="xla_rocm_plugin.so",
   )

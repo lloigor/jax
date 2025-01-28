@@ -45,6 +45,7 @@ build:macos --apple_platform_type=macos
 # See https://docs.bazel.build/versions/main/windows.html
 build:windows --features=compiler_param_file
 build:windows --features=archive_param_file
+build:windows --features=linker_param_file
 
 # XLA uses M_* math constants that only get defined by MSVC headers if
 # _USE_MATH_DEFINES is defined.
@@ -58,8 +59,9 @@ build:windows --host_copt=-DNOGDI
 # https://devblogs.microsoft.com/cppblog/announcing-full-support-for-a-c-c-conformant-preprocessor-in-msvc/
 # otherwise, there will be some compiling error due to preprocessing.
 build:windows --copt=/Zc:preprocessor
-build:windows --cxxopt=/std:c++17
-build:windows --host_cxxopt=/std:c++17
+build:windows --cxxopt=/std:c++20
+build:windows --cxxopt=/Zc:sizedDealloc- # fix error C2956
+build:windows --host_cxxopt=/std:c++20
 # Generate PDB files, to generate useful PDBs, in opt compilation_mode
 # --copt /Z7 is needed.
 build:windows --linkopt=/DEBUG

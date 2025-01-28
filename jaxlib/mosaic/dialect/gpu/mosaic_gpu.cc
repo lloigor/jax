@@ -316,7 +316,7 @@ llvm::FailureOr<WGMMALayout> GetWgmmaLayout(mlir::Location loc,
     return emitError(loc, llvm::formatv(params...));
   };
 
-  auto [strides, offset] = type.getStridesAndOffset();
+  auto [strides, offset] = mlir::getStridesAndOffset(type);
 
   WGMMALayout layout = WGMMALayout::RowMajor;
   if (strides[3] == 1) {
@@ -406,7 +406,7 @@ llvm::LogicalResult WGMMAOp::verify() {
 
   int groups_m = 0;
   auto a_shape = a_shaped_type.getShape();
-  if (auto a_memref = dyn_cast<mlir::MemRefType>(getA().getType())) {
+  if (auto a_memref = llvm::dyn_cast<mlir::MemRefType>(getA().getType())) {
     if (a_shape.size() != 4) {
       return error("When `a` is a memref, it must have rank 4.");
     }

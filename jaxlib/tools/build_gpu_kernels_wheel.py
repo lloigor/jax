@@ -85,12 +85,12 @@ def prepare_wheel_cuda(
   copy_runfiles = functools.partial(build_utils.copy_file, runfiles=r)
 
   copy_runfiles(
-      "__main__/jax_plugins/cuda/plugin_pyproject.toml",
+      "_main/jax_plugins/cuda/plugin_pyproject.toml",
       dst_dir=sources_path,
       dst_filename="pyproject.toml",
   )
   copy_runfiles(
-      "__main__/jax_plugins/cuda/plugin_setup.py",
+      "_main/jax_plugins/cuda/plugin_setup.py",
       dst_dir=sources_path,
       dst_filename="setup.py",
   )
@@ -101,19 +101,19 @@ def prepare_wheel_cuda(
   copy_runfiles(
       dst_dir=plugin_dir,
       src_files=[
-          f"__main__/jaxlib/cuda/_solver.{pyext}",
-          f"__main__/jaxlib/cuda/_blas.{pyext}",
-          f"__main__/jaxlib/cuda/_linalg.{pyext}",
-          f"__main__/jaxlib/cuda/_prng.{pyext}",
-          f"__main__/jaxlib/cuda/_rnn.{pyext}",
-          f"__main__/jaxlib/cuda/_sparse.{pyext}",
-          f"__main__/jaxlib/cuda/_triton.{pyext}",
-          f"__main__/jaxlib/cuda/_hybrid.{pyext}",
-          f"__main__/jaxlib/cuda/_versions.{pyext}",
-          f"__main__/jaxlib/cuda_plugin_extension.{pyext}",
-          f"__main__/jaxlib/mosaic/gpu/_mosaic_gpu_ext.{pyext}",
-          "__main__/jaxlib/mosaic/gpu/libmosaic_gpu_runtime.so",
-          "__main__/jaxlib/version.py",
+          f"_main/jaxlib/cuda/_solver.{pyext}",
+          f"_main/jaxlib/cuda/_blas.{pyext}",
+          f"_main/jaxlib/cuda/_linalg.{pyext}",
+          f"_main/jaxlib/cuda/_prng.{pyext}",
+          f"_main/jaxlib/cuda/_rnn.{pyext}",
+          f"_main/jaxlib/cuda/_sparse.{pyext}",
+          f"_main/jaxlib/cuda/_triton.{pyext}",
+          f"_main/jaxlib/cuda/_hybrid.{pyext}",
+          f"_main/jaxlib/cuda/_versions.{pyext}",
+          f"_main/jaxlib/cuda_plugin_extension.{pyext}",
+          f"_main/jaxlib/mosaic/gpu/_mosaic_gpu_ext.{pyext}",
+          "_main/jaxlib/mosaic/gpu/libmosaic_gpu_runtime.so",
+          "_main/jaxlib/version.py",
       ],
   )
 
@@ -124,12 +124,12 @@ def prepare_wheel_rocm(
   copy_runfiles = functools.partial(build_utils.copy_file, runfiles=r)
 
   copy_runfiles(
-      "__main__/jax_plugins/rocm/plugin_pyproject.toml",
+      "_main/jax_plugins/rocm/plugin_pyproject.toml",
       dst_dir=sources_path,
       dst_filename="pyproject.toml",
   )
   copy_runfiles(
-      "__main__/jax_plugins/rocm/plugin_setup.py",
+      "_main/jax_plugins/rocm/plugin_setup.py",
       dst_dir=sources_path,
       dst_filename="setup.py",
   )
@@ -140,16 +140,16 @@ def prepare_wheel_rocm(
   copy_runfiles(
       dst_dir=plugin_dir,
       src_files=[
-          f"__main__/jaxlib/rocm/_blas.{pyext}",
-          f"__main__/jaxlib/rocm/_linalg.{pyext}",
-          f"__main__/jaxlib/rocm/_prng.{pyext}",
-          f"__main__/jaxlib/rocm/_solver.{pyext}",
-          f"__main__/jaxlib/rocm/_sparse.{pyext}",
-          f"__main__/jaxlib/rocm/_hybrid.{pyext}",
-          f"__main__/jaxlib/rocm/_rnn.{pyext}",
-          f"__main__/jaxlib/rocm/_triton.{pyext}",
-          f"__main__/jaxlib/rocm_plugin_extension.{pyext}",
-          "__main__/jaxlib/version.py",
+          f"_main/jaxlib/rocm/_blas.{pyext}",
+          f"_main/jaxlib/rocm/_linalg.{pyext}",
+          f"_main/jaxlib/rocm/_prng.{pyext}",
+          f"_main/jaxlib/rocm/_solver.{pyext}",
+          f"_main/jaxlib/rocm/_sparse.{pyext}",
+          f"_main/jaxlib/rocm/_hybrid.{pyext}",
+          f"_main/jaxlib/rocm/_rnn.{pyext}",
+          f"_main/jaxlib/rocm/_triton.{pyext}",
+          f"_main/jaxlib/rocm_plugin_extension.{pyext}",
+          "_main/jaxlib/version.py",
       ],
   )
 

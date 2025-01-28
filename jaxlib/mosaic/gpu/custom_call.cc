@@ -13,10 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+#ifndef _WIN32
 #include <fcntl.h>
 #include <spawn.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#else
+#endif
 
 #include <array>
 #include <cstdint>
@@ -230,6 +233,7 @@ void InitContext(mlir::MLIRContext* context) {
   context->loadAllAvailableDialects();
 }
 
+#ifndef _WIN32
 absl::Status RunCUDATool(const char* tool,
                          const std::vector<const char*>& args,
                          bool stderr_to_stdout = false) {
@@ -284,9 +288,14 @@ class TemporaryDirectory {
  private:
   std::string path;
 };
+#endif
 
 void DumpCompilationOutput(mlir::ModuleOp module, const std::string& sm,
                            const std::string& ptx_isa) {
+#ifdef _WIN32
+  std::cerr << "DumpCompilationOutput unsupported on Windows" << std::endl;
+#else
+
   bool dump_ptx = getenv("MOSAIC_GPU_DUMP_PTX") != nullptr;
   bool dump_ptxas = getenv("MOSAIC_GPU_DUMP_PTXAS") != nullptr;
   bool dump_sass = getenv("MOSAIC_GPU_DUMP_SASS") != nullptr;
@@ -353,6 +362,7 @@ void DumpCompilationOutput(mlir::ModuleOp module, const std::string& sm,
       continue;
     }
   }
+#endif
 }
 
 absl::StatusOr<std::unique_ptr<mlir::ExecutionEngine>> Compile(
@@ -557,7 +567,9 @@ XLA_REGISTER_CUSTOM_CALL_TARGET_WITH_SYM("mosaic_gpu", &MosaicGPUCustomCall,
 
 extern "C" {
 
+#ifndef _WIN32
 __attribute__((visibility("default")))
+#endif
 void** MosaicGpuCompile(const char* module) {
   auto compiled = CompileAndInit(module);
   if (!compiled.ok()) {
@@ -577,7 +589,9 @@ void** MosaicGpuCompile(const char* module) {
   return tuple_ptr.release();
 }
 
+#ifndef _WIN32
 __attribute__((visibility("default")))
+#endif
 void MosaicGpuUnload(void** tuple_ptr) {
   delete reinterpret_cast<CompiledKernel*>(tuple_ptr[2]);
   delete[] tuple_ptr;
